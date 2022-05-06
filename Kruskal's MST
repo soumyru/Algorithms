@@ -1,0 +1,129 @@
+#include<stdlib.h>
+#include<stdio.h>
+#include<limits.h>
+#define ar(a,b)*(ar+a*v+b)
+
+int calcost(int *graf,int e)
+{
+    int cost=0;
+    for(;e>0;e--)
+    cost+=graf[(e-1)*3+2];
+    return cost;
+}
+
+void swap(int *a,int *b)
+{
+    int t;
+    t=*a;
+    *a=*b;
+    *b=t;
+
+}
+void sort(int *edgeList,int ed)
+{
+    int i,j,*p,k;
+    for(i=0;i<ed-1;i++)
+{
+    for(j=0;j<ed-i-1;j++)
+    {
+        if(edgeList[j*3+2]>edgeList[(j+1)*3+2])
+        {
+            for(k=0;k<3;k++)
+            swap(&edgeList[j*3+k],&edgeList[(j+1)*3+k]);
+
+        }
+    }
+}
+}
+
+
+void printEdges(int *edgeList,int ed)
+{
+
+    for(int i=0;i<ed;i++)
+    printf("%d-%d\t%d\n",edgeList[i*3],edgeList[i*3+1],edgeList[i*3+2]);
+}
+
+int findSet(int *visited,int v,int a)//returns the tree root of the vertex sent here
+{
+    return visited[a];
+}
+
+void unionSet(int *visited,int v,int a,int b)
+{
+    int x,i,q,r;
+    q=visited[a];
+    r=visited[b];
+    if(visited[a]<visited[b])
+    x=visited[a];
+    else
+    x=visited[b];
+
+    for(i=0;i<v;i++)
+    {
+        if(visited[i]==q || visited[i]==r)
+        visited[i]=x;
+}
+}
+
+int* findMST(int *ar,int v,int *edgeList,int ed)
+{
+    int *visited,*mst,i,j,mstcount=0;
+    //mstcount is just a counter as i from 0 to v-1
+    visited=(int*)calloc(v,sizeof(int));
+    for(int i =0;i<v;i++) 
+    visited[i]=i;
+    mst=(int*)calloc((v-1)*3,sizeof(int));
+    sort(edgeList,ed);
+    printf("\nSorted list:\n");
+    printEdges(edgeList,ed);
+
+    for(int i=0;i<ed;i++)
+    {
+        if(findSet(visited,v,edgeList[i*3])!=findSet(visited,v,edgeList[i*3+1]))
+        {
+            for(j=0;j<3;j++)
+            mst[mstcount*3+j]=edgeList[i*3+j];
+
+            mstcount++;
+            unionSet(visited,v,edgeList[i*3],edgeList[i*3+1]);
+        }
+    }
+    return mst;
+}
+
+int main()
+{
+    int *ar,v,e,i,*mst,*edgeList,ed=0,a,b,wt,cost;
+    //ed is no. of valid edges
+    //ar matrix is basically unused in this program
+
+    printf("Enter no. of vertices and edges");
+    scanf("%d%d",&v,&e);
+    ar=(int*)calloc(v*v,sizeof(int));
+    for(int i=0;i<v*v;i++)
+    ar[i]=INT_MAX; //Max int value
+    puts("Enter the edges and weights:"); //puts prints only string 
+    edgeList=(int*)calloc(e*3,sizeof(int));//The calloc() function in C is used to allocate a specified amount of memory and then initialize it to zero.
+    for(i=0;i<e;i++)
+    {
+    scanf("%d%d%d",&a,&b,&wt);
+    if(ar(a,b)>wt && a!=b)
+    {
+        ar(a,b)=wt;
+        edgeList[ed*3]=a;// “arr[i]” is treated as *(arr + i)
+        edgeList[ed*3+1]=b;
+        edgeList[ed*3+2]=wt;
+        ed++;
+    }
+    }
+/*
+printf("Edges & weights are:\n");
+printEdges(edgeList,ed);
+*/
+mst=findMST(ar,v,edgeList,ed);
+printf("\nThe MST is:\n");
+printEdges(mst,v-1);
+cost=calcost(mst,v-1);
+printf("\nThe total cost of MST is:%d",cost);
+}
