@@ -1,0 +1,71 @@
+#include<stdio.h>
+#include<limits.h>
+#include<stdbool.h>
+
+//macro definition, v is macro name & 9 is macro definition
+#define v 9
+
+int minDist(int dis[], bool sptSet[])
+{
+    // Initialize min value
+    int min = INT_MAX, min_index;
+ 
+    for (int ver = 0; ver < v; ver++)
+        if (sptSet[ver] == false && dis[ver] <= min)
+            min = dis[ver], min_index = ver;
+ 
+    return min_index;
+}
+
+void printSol(int dis[])
+{
+    printf("Vertex \t\t Distance from Source\n");
+    for (int i = 0; i < v; i++)
+        printf("%d \t\t %d\n", i, dis[i]);
+}
+
+void dijkstra(int graph[v][v],int src)
+{
+    int dis[v];//will hold the shortest distance from src to i
+    bool sptSet[v]; //will be true if vertex i is included in shortest
+    // path tree or shortest distance from src to i is finalized
+
+    for(int i=0;i<v;i++){
+    dis[i]=INT_MAX;
+    sptSet[i]=false;// Initialize all distances as INFINITE and stpSet[] as false
+    }
+
+    dis[src]=0;// Distance of source vertex from itself is always 0
+
+    for(int c=0;c<v-1;c++)    // Find shortest path for all vertices
+    {
+        int u=minDist(dis,sptSet);
+        sptSet[u]=true;
+        for(int ver=0;ver<v;ver++)
+        {
+            // Update dist[v] only if is not in sptSet, there is an edge from
+            // u to v, and total weight of path from src to  v through u is
+            // smaller than current value of dist[v]
+            if(!sptSet[ver] && graph[u][ver] && dis[u]!=INT_MAX && dis[u]+graph[u][ver]<dis[ver])
+            dis[ver]=dis[u]+graph[u][ver];
+        }
+        
+    }
+    printSol(dis);
+}
+int main()
+{
+    //9 X 9 graph 
+    int graph[v][v]={ { 0, 4, 0, 0, 0, 0, 0, 8, 0 },
+                        { 4, 0, 8, 0, 0, 0, 0, 11, 0 },
+                        { 0, 8, 0, 7, 0, 4, 0, 0, 2 },
+                        { 0, 0, 7, 0, 9, 14, 0, 0, 0 },
+                        { 0, 0, 0, 9, 0, 10, 0, 0, 0 },
+                        { 0, 0, 4, 14, 10, 0, 2, 0, 0 },
+                        { 0, 0, 0, 0, 0, 2, 0, 1, 6 },
+                        { 8, 11, 0, 0, 0, 0, 1, 0, 7 },
+                        { 0, 0, 2, 0, 0, 0, 6, 7, 0 } };
+
+dijkstra(graph,0);
+    return 0;
+}
