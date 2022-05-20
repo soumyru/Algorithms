@@ -1,0 +1,63 @@
+#include<stdio.h>
+#include<stdbool.h>
+int Node;
+int graph[100][100];
+int color[100];
+
+void graphColoring() 
+{
+color[0] = 0; //Assign first color for the first node
+bool colorUsed[100]; 
+
+for(int i=1;i<Node;i++)
+color[i]=-1;
+
+for(int i=0;i<Node;i++)
+colorUsed[i]=false;
+
+for(int u=1;u<Node;u++)
+{
+    int col;
+    for(int v=0;v<Node;v++)
+    {
+        if(graph[u][v]&&color[v]!=-1)
+        colorUsed[color[v]]=true;
+    }
+    for( col=0;col<Node;col++)
+    {
+        if(!colorUsed[col])
+        break;
+    }
+    color[u]=col;
+    for(int v=0;v<Node;v++)
+    {
+        if(graph[u][v]&&color[v]!=-1)
+        colorUsed[color[v]]=false;
+    }
+}
+}
+
+void printGraphColors()
+{
+    char defaultColorList[20][20]={"Red","Blue","Green","Violet","Indigo","Yellow","Orange"};
+puts("\n Result is:\n");
+for(int u=0;u<Node;u++)
+printf("Node %d is %s\n",u,defaultColorList[color[u]]);
+
+}
+
+void main()
+{
+    int i,j;
+    printf("Enter the no. of nodes:");
+    scanf("%d",&Node);
+    printf("Enter the adjacency matrix:\n");
+    for(i=0;i<Node;i++)
+    {
+        for(j=0;j<Node;j++)
+        scanf("%d",&graph[i][j]);
+
+    }
+    graphColoring();
+    printGraphColors();
+}
