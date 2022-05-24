@@ -1,0 +1,81 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<conio.h>// conio.h is a header file used in c and cpp and it includes inbuilt functions like getch() and clrscr(). It stand for console input ouput 
+//getch() is a way to get a user inputted character.
+// clrscr() function clears the screen and moves the cursor to the upper-left-hand corner of the screen
+
+void merge(int ar[],int l,int m,int h)
+{
+    int i,j,k;
+    int n1=m-l+1;
+    int n2=h-m;
+
+    int ar1[n1],ar2[n2];
+    // Copy data to temp arrays
+    for(i=0;i<n1;i++)
+    ar1[i]=ar[l+i]; //from low to mid
+    for(j=0;j<n2;j++)
+    ar2[j]=ar[m+1+j]; //from mid+1 to high
+
+    i=0,j=0,k=l;
+    while(i<n1 && j<n2)
+    {
+        if(ar1[i]<=ar2[j]){
+        ar[k]=ar1[i];
+        i++;
+        }
+        else{
+            ar[k]=ar2[j];
+            j++;
+        }
+        k++;
+    }
+    //Copy the remaining elements of L[], if there are any
+    while(i<n1)
+    {
+        ar[k]=ar1[i];
+        i++;
+        k++;
+
+    }
+    while(j<n2)
+    {
+        ar[k]=ar2[j];
+        j++;
+        k++;
+
+    }
+
+
+}
+void mergeSort(int ar[],int l,int h)
+{
+    if(l<h){
+    int m=l+(h-l)/2; //mid
+    
+    mergeSort(ar,l,m);
+    mergeSort(ar,m+1,h);
+    merge(ar,l,m,h); 
+    }
+}
+void printArray(int ar[],int n)
+{
+    for(int i=0;i<n;i++)
+    printf("%d ",ar[i]);
+    printf("\n");
+}
+int main()
+{
+    
+    int ar[20],n;
+    printf("Enter no. of elements:");
+    scanf("%d",&n);
+    printf("Enter elements:\n");
+    for(int i=0;i<n;i++)
+    scanf("%d",&ar[i]);
+    mergeSort(ar,0,n-1); 
+    printf("Sorted array:\n");
+    printArray(ar,n);
+    return 0;
+    
+}
