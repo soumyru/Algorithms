@@ -1,0 +1,55 @@
+#include<stdio.h>
+void swap(int a[],int *b)
+{
+    int t=*a;
+    *a=*b;
+    *b=t;
+}
+
+int partition(int ar[],int l,int h)
+{
+    int pi=ar[h];
+    int i=l-1;
+    for(int j=l;j<h;j++)
+    {
+        if(ar[j]<=pi)
+        {
+            i++;
+            swap(&ar[i],&ar[j]);//to pass array as parameter we need to include '&' before array
+        }
+    }
+    swap(&ar[i+1],&ar[h]);
+    return (i+1);
+}
+void printArray(int ar[],int n)
+{
+    for(int i=0;i<n;i++)
+    printf("%d ",ar[i]);
+    printf("\n");
+}
+
+int quickSort(int ar[],int l,int h)
+{
+    if(l<h)
+    {
+        int p=partition(ar,l,h);
+        quickSort(ar,l,p-1);
+        quickSort(ar,p+1,h);
+
+    }
+}
+int main()
+{
+    int ar[10],n;
+    printf("Enter size of array:");
+    scanf("%d",&n);
+    printf("Enter array:");
+    for(int i=0;i<n;i++)
+    scanf("%d",&ar[i]);
+    printf("Array:\n");
+    printArray(ar,n);
+    quickSort(ar,0,n-1);
+    printf("Sorted Array:\n");
+    printArray(ar,n);
+
+}
